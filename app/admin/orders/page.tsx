@@ -47,6 +47,7 @@ export default async function AdminOrdersPage({
                     <th className="text-left py-3 px-2 font-medium text-slate-500">Status</th>
                     <th className="text-center py-3 px-2 font-medium text-slate-500">Items</th>
                     <th className="text-right py-3 px-2 font-medium text-slate-500">Total</th>
+                    <th className="text-right py-3 px-2 font-medium text-slate-500">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -58,7 +59,7 @@ export default async function AdminOrdersPage({
                       <td className="py-3 px-2">
                         <Link
                           href={`/admin/orders/${order.id}`}
-                          className="text-indigo-600 hover:text-indigo-700 font-mono text-xs font-medium"
+                          className="text-indigo-600 hover:text-indigo-700 font-mono text-xs font-medium hover:underline"
                         >
                           {order.id.slice(0, 8)}...
                         </Link>
@@ -83,6 +84,14 @@ export default async function AdminOrdersPage({
                       </td>
                       <td className="py-3 px-2 text-right text-slate-900 font-medium">
                         {formatINR(Number(order.totalInr))}
+                      </td>
+                      <td className="py-3 px-2 text-right">
+                        <Link
+                          href={`/admin/orders/${order.id}`}
+                          className="inline-flex items-center justify-center rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-3 py-1.5 transition-colors border border-indigo-100/50"
+                        >
+                          Manage Order
+                        </Link>
                       </td>
                     </tr>
                   ))}
