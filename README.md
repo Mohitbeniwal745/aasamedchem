@@ -106,6 +106,21 @@ A production-quality **Inventory and Order Management System** built for AasaMed
 
 **Indexes:** `order_items_order_id_idx` (order_id)
 
+### `product_requests`
+
+| Column | Type | Constraints |
+|---|---|---|
+| `id` | `UUID` | PK, `gen_random_uuid()` |
+| `user_id` | `UUID` | FK → `users.id` |
+| `name` | `TEXT` | NOT NULL |
+| `quantity` | `NUMERIC(20,8)` | NOT NULL |
+| `unit` | `TEXT` | NOT NULL |
+| `notes` | `TEXT` | |
+| `status` | `TEXT` | NOT NULL, DEFAULT `'pending'`, CHECK IN (`'pending'`, `'approved'`, `'rejected'`) |
+| `created_at` | `TIMESTAMPTZ` | DEFAULT `now()` |
+
+**Indexes:** `product_requests_user_id_idx` (user_id)
+
 ### Why `NUMERIC(20,8)` instead of `FLOAT`?
 
 - **Precision 20** = up to 12 integer digits → handles crore-level INR totals (₹99,99,99,99,999.99999999)
@@ -270,6 +285,14 @@ Open [http://localhost:3000](http://localhost:3000) and log in with the test cre
    - Verify: `unit_price = ₹0.25/mL`, `line_total = 5000 × 0.25 = ₹1,250.00`
 4. Update order status (e.g. Pending → Confirmed → Fulfilled)
 
+### 5. Custom Product Requests (Unlisted Items)
+1. Log in as `seller@test.com` / `Seller123!` and navigate to **Catalogue**.
+2. Click the **Request Unlisted Product** help button on the top right.
+3. Fill in the form (e.g., product name, quantity, unit, and custom notes) and click **Submit Request**.
+4. Track request status (Pending/Approved/Rejected) in the table below.
+5. Log in as `admin@test.com` / `Admin123!` and go to **Requests** in the header.
+6. Inline **Approve** or **Reject** the request and verify it updates instantly.
+
 ---
 
 ## Features Summary
@@ -280,11 +303,13 @@ Open [http://localhost:3000](http://localhost:3000) and log in with the test cre
 - **Inventory**: Stock levels with amber highlighting for low-stock items (< 500 base units)
 - **Orders**: Filterable by status, clickable for detail view
 - **Order Detail**: Full conversion audit table showing display vs base quantities, status update
+- **Requests**: Review, approve, or reject unlisted product requests submitted by sellers
 
 ### Seller Panel
 - **Catalogue**: Product grid with search, category filter, compatible unit selector, live price preview
 - **Cart**: Editable quantities and units, live price recalculation, grand total, place order
 - **My Orders**: Order history with expandable line items showing conversion details
+- **Custom Requests**: Request unlisted products not currently in the inventory and track request status history
 
 ### Authentication & Authorization
 - NextAuth.js v5 with credential provider
